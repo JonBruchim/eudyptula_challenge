@@ -1,0 +1,8 @@
+
+# Remove these files
+*.cmd
+*.order
+*symvers
+*.mod*
+*.o
+*.ko
