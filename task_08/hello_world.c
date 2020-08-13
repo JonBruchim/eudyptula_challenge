@@ -28,9 +28,10 @@ ssize_t debugfs_file_read(struct file *file, char *buf, size_t len, loff_t *offs
 
 	error = copy_to_user(buf, debugfs_buf, strlen(debugfs_buf));
 	if (error)
-		return 0;
+		goto out;
 	read_len = strlen(debugfs_buf);
 
+out:
 	mutex_unlock(&debugfs_hello_mutex);
 
 	return read_len;
@@ -44,8 +45,10 @@ ssize_t debugfs_file_write(struct file *file, const char *buf, size_t len, loff_
 	mutex_lock(&debugfs_hello_mutex);
 
 	error = copy_from_user(debugfs_buf, buf, len);
-	if (error)
-		return 0;
+	if (error) {
+		len = 0;
+		goto out;
+	}
 
 	pr_info("read: %s", debugfs_buf);
 
